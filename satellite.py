@@ -16,3 +16,18 @@ class Satelite:
     
     def calculateY(self):
         self.x=integrate(integrate(-1*(self.GM*self.y)/self.denominator()))
+        
+    def set_x(self,x):
+        self.x=x
+    
+    def set_y(self,y):
+        self.y=y
+        
+    def set_R(self,R):
+        self.R=R
+    
+    def set_Rs(self,Rs):
+        self.Rs=Rs
+        
+    def set_GM(self,G,M):
+        self.GM=G*M
