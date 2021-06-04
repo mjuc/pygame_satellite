@@ -18,14 +18,23 @@ sat=Satelite()
 #custom pygame event responsible for starting simulation
 run_sim_event = pygame.event.Event(pygame.USEREVENT+1)
 
+def collision(x,y,radius,sat_radius):
+    dist=np.sqrt(((600-x)**2)+((350-y)**2))
+    if dist<(radius+sat_radius):
+        return True
+    else:
+        return False
+
 #update model params
 def set_sat_refresh():
     print("Refresh values")
     sat.set_R(slider_r.get_value())
     sat.set_Rs(slider_rs.get_value())
     sat.set_GM(slider_m.get_value(),slider_G.get_value())
-    sat.set_x(slider_x.get_value())
-    sat.set_y(slider_y.get_value()) 
+    sat.set_x(slider_x.get_value()+600)
+    sat.set_y(slider_y.get_value()+350) 
+    print("X: ",sat.get_x())
+    print("Y: ",sat.get_y())
 
 #initialize simulation
 def run_sim():
@@ -39,8 +48,8 @@ screen.fill(WHITE)
 
 #menu
 #sliders regulating model params
-slider_x = thorpy.SliderX(100, (10, 60), "X axis distance")
-slider_y = thorpy.SliderX(100, (10, 60), "Y axis distance")
+slider_x = thorpy.SliderX(100, (-50, 50), "X axis distance")
+slider_y = thorpy.SliderX(100, (-50, 50), "Y axis distance")
 slider_r = thorpy.SliderX(50, (1,10), "Planet radius")
 slider_rs = thorpy.SliderX(10, (1,5), "Satellite radius")
 slider_m = thorpy.SliderX(160, (20,100), "Planet mass")
@@ -84,23 +93,37 @@ while running:
             pygame.draw.circle(screen,BLUE,(600,350),radius)
             pygame.draw.circle(screen,
                                GREEN,
-                               (600+dist_x+radius+sat_radius,350+dist_y+radius+sat_radius)
+                               (dist_x,
+                                dist_y)
                                ,sat_radius)
             pygame.display.update()
-            time=np.arange(0,1000,0.01)
-            X=sat.calculateX(time)
-            Y=sat.calculateY(time)
+            times=np.arange(0,5,1)
+            X=sat.calculateX(times)
+            Y=sat.calculateY(times)
             radius=sat.get_R()
             sat_radius=sat.get_Rs()
-            print(len(X))
             for i in range(0,len(X)):
-                screen.fill(WHITE)
-                box.blit()
-                box.update()
-                pygame.draw.circle(screen,BLUE,(600,350),radius)
-                pygame.draw.circle(screen,GREEN,(600+int(X[i])+radius+sat_radius,350+int(Y[i])+radius+sat_radius),sat_radius)
-                pygame.display.update()                              
-        
+                if not collision(X[i],Y[i],radius,sat_radius):
+                    screen.fill(WHITE)
+                    box.blit()
+                    box.update()
+                    pygame.draw.circle(screen,BLUE,(600,350),radius)
+                    pygame.draw.circle(screen,GREEN,
+                                    (int(X[i]),
+                                    int(Y[i])),
+                                    sat_radius)
+                    pygame.display.update()
+                else:
+                    screen.fill(WHITE)
+                    box.blit()
+                    box.update()
+                    pygame.draw.circle(screen,BLUE,(600,350),radius)
+                    pygame.draw.circle(screen,RED,
+                                    (int(X[i]),
+                                    int(Y[i])),
+                                    sat_radius)
+                    pygame.display.update()
+                    break
         menu.react(event)
         pygame.display.update()
 

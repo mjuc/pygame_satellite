@@ -23,16 +23,16 @@ class Satelite:
         self.GM=G*M
             
     def calculateX(self,time):
-        return odeint(fx,self.y,time,(self.GM,0))
+        return odeint(fx,self.x,time,(self.GM,0))
         
     def calculateY(self,time):
-        return odeint(fy,self.x,time,(self.GM,0))
+        return odeint(fy,self.y,time,(self.GM,0))
         
     def set_x(self,x):
-        self.x=x+self.R+self.Rs
+        self.x=x
     
     def set_y(self,y):
-        self.y=y+self.R+self.Rs
+        self.y=y
         
     def set_R(self,R):
         self.R=R
