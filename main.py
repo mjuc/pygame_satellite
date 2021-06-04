@@ -97,12 +97,12 @@ while running:
                                 dist_y)
                                ,sat_radius)
             pygame.display.update()
-            times=np.arange(0,5,1)
+            times=np.arange(0,1000000,1)
             X=sat.calculateX(times)
             Y=sat.calculateY(times)
             radius=sat.get_R()
             sat_radius=sat.get_Rs()
-            for i in range(0,len(X)):
+            for i in times:
                 if not collision(X[i],Y[i],radius,sat_radius):
                     screen.fill(WHITE)
                     box.blit()
@@ -124,6 +124,7 @@ while running:
                                     sat_radius)
                     pygame.display.update()
                     break
+            print("Simulation over")
         menu.react(event)
         pygame.display.update()
 
